@@ -1,17 +1,23 @@
 import "./Notes.css";
-import Note from "./Note";
+import Note from "./Note.js";
+import { useFormContext } from "../../context/FormContext.js";
+import { useEffect } from "react";
 
-const Notes = (props) => {
-  const { notes, deleteNote, toggleModal, setSelectedNote } = props;
+const Notes = () => {
+  const { notes, deleteNote, toggleModal, setSelectedNote, fetchNotes} = useFormContext();
+
+  useEffect(() => {
+    fetchNotes();
+  }, [fetchNotes]);
 
   return (
     <div className="notes">
       {notes.length === 0 ? (
         <p>Notes you add appear here.</p>
       ) : (
-        notes.map((note, index) => (
+        notes.map((note) => (
           <Note
-            key={index}
+            key={note.id}
             note={note}
             deleteNote={deleteNote}
             toggleModal={toggleModal}

@@ -1,0 +1,68 @@
+# version: '3.7'
+
+services:
+  postgres:
+    image: postgres:15
+    restart: always
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=prisma
+    ports:
+      - "5433:5432"
+    networks:
+      - prisma-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 5s
+      timeout: 2s
+      retries: 20
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    command: postgres -c listen_addresses='*'
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Backend service (Node.js with Express)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: always
+
+    ports:
+      - "1338:1338" # Expose backend port
+    depends_on:
+      postgres:
+        condition: service_healthy
+    env_file:
+      - .env.prod
+    networks:
+      - prisma-network
+    volumes:
+      - ./backend:/app
+    working_dir: /app
+
+  # Frontend service (React with Vite served by Nginx)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile # Use the production Dockerfile to build the app and serve with Nginx
+    restart: always
+    ports:
+      - "3000:80" # Expose frontend on port 80 (Nginx default)
+    depends_on:
+      - backend
+    networks:
+      - prisma-network
+    volumes:
+      - ./frontend:/app
+    working_dir: /app
+
+networks:
+  prisma-network:
+
+volumes:
+  postgres_data:

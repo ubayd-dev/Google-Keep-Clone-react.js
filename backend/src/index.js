@@ -2,32 +2,54 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import { PrismaClient } from "../generated/prisma/index.js";
+import UserRoutes from "./routes/UserRoutes.js";
+import NotesRouter from "./routes/NotesRouter.js";
+import prisma from "./db.js"; // relative to src/index.js
+import ReminderRouter from "./routes/ReminderRouter.js";
+import "./services/reminderjob.js";
+import TaskRouter from "./routes/TaskRouter.js";
 
 dotenv.config();
 
 const app = express();
-const prisma = new PrismaClient();
 
+const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:3001";
+app.use(
+  cors({
+    // origin URL
+    //* methods []
+    // include CRUD methods
+    origin: FRONTEND_URL,
+    methods: ["GET", "POST", "PATCH", "DELETE"],
+    credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
-// Middleware
-app.use(cors());
 app.use(express.json());
 
-// Test route
-app.get("/", (req, res) => {
-  res.json({ status: "ok", message: "Google Keep Backend is running" });
-});
-
-// // Get all users
+// Basic health
 app.get("/", async (req, res) => {
   const userCount = await prisma.user.count();
-  res.json(
-    userCount == 0
-      ? "No users have been added yet."
-      : "Some users have been added to the database."
-  );
+  res.json({
+    status: "ok",
+    message:
+      userCount === 0
+        ? "No users have been added yet."
+        : "Some users have been added to the database.",
+  });
 });
+
+// test api
+app.get("/api/test", (req, res) => {
+  res.json({ message: "API is working!" });
+});
+
+// Mount routers (keeps existing endpoints you used earlier)
+app.use("/user", UserRoutes);
+app.use("/notes", NotesRouter);
+app.use("/task", TaskRouter);
+app.use("/reminder", ReminderRouter);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {

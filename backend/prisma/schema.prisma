@@ -21,7 +21,6 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   notes  Notes[]
-
 }
 
 model Notes{
@@ -34,6 +33,7 @@ userId String
 user User @relation(fields: [userId], references: [id])
 tasks Tasks[]
 noteType NoteType @default(PERSONAL)
+reminder Reminder?
 }
 
 model Tasks{
@@ -45,7 +45,20 @@ updatedAt DateTime @updatedAt
 notesId String
 notes Notes @relation(fields: [notesId], references: [id])
 status TaskStatus @default(PENDING)
+reminder Reminder?
 
+}
+
+model Reminder {
+  id          Int      @id @default(autoincrement())
+  title       String
+remindAt DateTime
+  isSent Boolean  @default(false)
+noteId String @unique
+note Notes @relation(fields:[noteId], references: [id])
+taskId String? @unique
+task Tasks? @relation(fields: [taskId], references: [id])
+email String?
 }
 
 enum NoteType{

@@ -1,12 +1,17 @@
 import React, { useState } from "react";
-import Navbar from "./components/Navbar/Navbar";
-import Sidebar from "./components/Sidebar/Sidebar";
-import Form from "./components/Form/Form";
-import Notes from "./components/Notes/Notes";
-import Modal from "./components/Modal/Modal";
+import Navbar from "./components/Navbar/Navbar.js";
+import Sidebar from "./components/Sidebar/Sidebar.js";
+import Form from "./components/Form/Form.js";
+import Notes from "./components/Notes/Notes.js";
+import Modal from "./components/Modal/Modal.js";
+import Login from "./components/Login/Login.js";
+import Signup from "./components/Signup/Signup.js";
 
 const NOTES = [];
 const App = () => {
+  // state for auth
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showLogin, setShowLogin] = useState(true);
   // creating state for Notes
   const [notes, setNotes] = useState(NOTES);
   const [selectedNote, setSelectedNote] = useState({});
@@ -38,7 +43,6 @@ const App = () => {
     });
   };
 
-
   const toggleModal = () => {
     // open or close the modal on previous state - setIsModalOpen
     setIsModalOpen((prevState) => {
@@ -48,22 +52,33 @@ const App = () => {
 
   return (
     <div>
-      <Navbar />
-      <Sidebar />
-      <Form addNote={addNote} />
-      <Notes
-        notes={notes}
-        deleteNote={deleteNote}
-        toggleModal={toggleModal}
-        setSelectedNote={setSelectedNote}
-      />
-      {isModalOpen && (
-        <Modal
-          isModalOpen={isModalOpen}
-          selectedNote={selectedNote}
-          toggleModal={toggleModal}
-          editNote={editNote}
-        />
+      {/*If user is logged in, show Login */}
+      {!isLoggedIn ? (
+        showLogin ? (
+          <Login setIsLoggedIn={setIsLoggedIn} setShowLogin={setShowLogin} />
+        ) : (
+          <Signup setShowLogin={setShowLogin} />
+        )
+      ) : (
+        <>
+          <Navbar />
+          <Sidebar />
+          <Form addNote={addNote} />
+          <Notes
+            notes={notes}
+            deleteNote={deleteNote}
+            toggleModal={toggleModal}
+            setSelectedNote={setSelectedNote}
+          />
+          {isModalOpen && (
+            <Modal
+              isModalOpen={isModalOpen}
+              selectedNote={selectedNote}
+              toggleModal={toggleModal}
+              editNote={editNote}
+            />
+          )}
+        </>
       )}
     </div>
   );

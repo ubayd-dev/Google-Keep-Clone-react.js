@@ -1,38 +1,45 @@
 import React, { useState } from "react";
 import "./Form.css";
-import { uid } from "uid";
+import { useFormContext } from "../../context/FormContext.js";
+//  import axios
 
-const Form = (props) => {
-  const { edit, selectedNote, toggleModal } = props;
+const Form = ({ edit, selectedNote, toggleModal }) => {
+  const { addNote, editNote } = useFormContext();
   const [title, setTitle] = useState((edit && selectedNote.title) || "");
   const [text, setText] = useState((edit && selectedNote.text) || "");
   const [isActiveForm, setIsActiveForm] = useState(edit);
 
-  const titleChangeHandler = (event) => setTitle(event.target.value);
+  const titleChangeHandler = (event) => {
+    setTitle(event.target.value);
+    console.log("title :", event.target.value);
+  };
   const textChangeHandler = (event) => {
     setText(event.target.value);
+    console.log("text :", event.target.value);
+
     setIsActiveForm(true);
   };
 
-  const submitFormHandler = (event) => {
+  const submitFormHandler = async (event) => {
     event.preventDefault();
 
     if (!edit) {
-      props.addNote({
-        id: uid(),
-        title,
-        text,
-      });
-
+      await addNote({ title, text });
       setIsActiveForm(false);
     } else {
-      props.editNote({
-        id: selectedNote.id,
-        title,
-        text,
-      })
+      await editNote({ id: selectedNote.id, title, text });
       toggleModal();
     }
+
+    //   setIsActiveForm(false);
+    // } else {
+    //   props.editNote({
+    //     id: selectedNote.id,
+    //     title,
+    //     text,
+    //   })
+    //   toggleModal();
+
     setTitle("");
     setText("");
   };
@@ -48,7 +55,8 @@ const Form = (props) => {
       <div className="form-container active-form" onClick={formClickHandler}>
         <form
           onSubmit={submitFormHandler}
-          className={isActiveForm ? "form" : ""}>
+          className={isActiveForm ? "form" : ""}
+        >
           {isActiveForm && (
             <input
               onChange={titleChangeHandler}

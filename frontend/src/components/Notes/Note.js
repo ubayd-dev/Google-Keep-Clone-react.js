@@ -1,8 +1,11 @@
 import React, { useState } from "react";
+import { useFormContext } from "../../context/FormContext.js";
 
 export default function Note(props) {
-  const { toggleModal, note, setSelectedNote } = props;
+  const { toggleModal, setSelectedNote } = props;
+  const { deleteNote } = useFormContext();
   const [isHover, setIsHover] = useState(false);
+  const note = { id: "", title: "", text: "" };
 
   const noteClickHandler = () => {
     toggleModal();
@@ -19,12 +22,12 @@ export default function Note(props) {
     setIsHover(false);
   };
 
-  const deleteHandler = () => props.deleteNote(note.id);
+  const deleteHandler = () => deleteNote(note.id);
 
   return (
     <div
       className="note"
-      id={props.id}
+      id={note.id}
       onClick={noteClickHandler}
       onMouseOver={hoverOverHandler}
       onMouseOut={hoverOutHandler}

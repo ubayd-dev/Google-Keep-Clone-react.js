@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./Modal.css";
-import Form from "../Form/Form";
+import Form from "../Form/Form.js";
 
 
 export default function Modal(props) {

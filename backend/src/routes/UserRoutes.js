@@ -1,27 +1,22 @@
 import { Router } from "express";
-import { UserController } from "../controllers/User";
+import { UserValidator } from "../validators/UserValidator.js";
+import UserController from "../controllers/User.js";
 
 class UserRouter {
   constructor() {
     this.router = Router();
     this.getRoutes();
     this.postRoutes();
-    this.patchRoutes();
-    this.putRoutes();
-    this.deleteRoutes();
   }
 
-  getRoutes() {}
+  getRoutes() {
+    this.router.get("/", UserController.GetUsers);
+  }
 
   postRoutes() {
-    this.router.post("/user", UserController.CreateUser);
+    this.router.post("/", UserController.CreateUser);
+    this.router.post("/login", UserController.LoginUser);
   }
-
-  patchRoutes() {}
-
-  putRoutes() {}
-
-  deleteRoutes() {}
 }
 
 export default new UserRouter().router;
