@@ -23,9 +23,13 @@ export const FormProvider = ({ children }) => {
       setLoading(false);
     }
   };
-  const addNote = async ({ title, text }) => {
+  const addNote = async ({ title, text, token }) => {
     try {
-      const res = await api.post("/notes/create", { title, content: text });
+      const res = await api.post(
+        "/notes/create",
+        { title, content: text },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
       setNotes((prevNotes) => [...prevNotes, res.data]);
     } catch (e) {
       console.error("Error adding note:", e);

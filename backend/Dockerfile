@@ -32,7 +32,7 @@ COPY --from=build /app/package.json ./
 COPY --from=build /app/src ./src  
 
 # Expose application port
-EXPOSE 1337
+EXPOSE 1338
 
 # Run Prisma migrations at runtime
 CMD ["sh", "-c", "npx prisma migrate deploy && npm run start"]

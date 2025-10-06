@@ -8,7 +8,7 @@ const Notes = () => {
 
   useEffect(() => {
     fetchNotes();
-  }, [fetchNotes]);
+  }, []);
 
   return (
     <div className="notes">

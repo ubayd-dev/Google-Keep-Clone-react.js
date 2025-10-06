@@ -16,7 +16,7 @@ class NotesController {
       });
       res.status(201).json(note);
     } catch (e) {
-      next(res.status(401).json({ error: e.message }));
+      next(res.status(400).json({ error: e.message }));
     }
   }
 

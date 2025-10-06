@@ -19,8 +19,8 @@ app.use(
     // origin URL
     //* methods []
     // include CRUD methods
-    origin: FRONTEND_URL,
-    methods: ["GET", "POST", "PATCH", "DELETE"],
+    origin: "http://localhost:3001",
+    methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
   })
@@ -51,7 +51,7 @@ app.use("/notes", NotesRouter);
 app.use("/task", TaskRouter);
 app.use("/reminder", ReminderRouter);
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 1338;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });

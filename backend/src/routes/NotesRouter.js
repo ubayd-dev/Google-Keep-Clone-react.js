@@ -1,5 +1,6 @@
 import { Router } from "express";
-import NotesController  from "../controllers/Notes.js";
+import NotesController from "../controllers/Notes.js";
+import { authenticateToken } from "../middleware/index.js";
 
 class NotesRouter {
   constructor() {
@@ -11,19 +12,19 @@ class NotesRouter {
   }
 
   getRoutes() {
-        this.router.get("/", NotesController.getNotes);
+    this.router.get("/", authenticateToken, NotesController.getNotes);
   }
 
   postRoutes() {
-    this.router.post("/create", NotesController.createNotes);
+    this.router.post("/create", authenticateToken, NotesController.createNotes);
   }
 
   patchRoutes() {
-    this.router.patch("/", NotesController.updateNotes);
+    this.router.patch("/", authenticateToken, NotesController.updateNotes);
   }
 
   deleteRoutes() {
-       this.router.delete("/", NotesController.deleteNotes);
+    this.router.delete("/", authenticateToken, NotesController.deleteNotes);
   }
 }
 

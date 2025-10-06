@@ -1,16 +1,17 @@
-import jwt from 'jsonwebtoken'
-import dotenv from 'dotenv'
-import { PrismaClient } from "../../generated/prisma";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+import { PrismaClient } from "../../generated/prisma/index.js";
 
-dotenv.config()
+dotenv.config();
 const prisma = new PrismaClient();
 
 export async function authenticateToken(req, res, next) {
+
   try {
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
 
-    if (!token) return res.sendStatus(401); // Unauthorized
+    if (!token) return res.sendStatus(401).json({error: 'Token missing'}); // Unauthorized
 
     // Verify token
     let user;
@@ -48,7 +49,7 @@ export async function authenticateToken(req, res, next) {
 //                     id: user.uuid,
 //                 },
 //             });
-        
+
 //             if (err) return res.sendStatus(403);
 //             // Forbidden
 //             req.user = user;
