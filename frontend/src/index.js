@@ -3,11 +3,15 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App.js";
 import { FormProvider } from "./context/FormContext.js";
+import { ReminderProvider } from "./context/ReminderContext.js";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <FormProvider>
-    <App />
+    <ReminderProvider>
+      {" "}
+      <App />
+    </ReminderProvider>
   </FormProvider>
 
   // If you want to start measuring performance in your app, pass a function

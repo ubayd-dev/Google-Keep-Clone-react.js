@@ -11,7 +11,7 @@ export const transporter = nodemailer.createTransport({
 export const sendEmail = async (to, subject, text) => {
   try {
     await transporter.sendMail({
-      from: `"Notes App" < ${process.env.EMAIL_USER} >`,
+      from:`"Notes App" <${process.env.EMAIL_USER}>`,
       to,
       subject,
       text,

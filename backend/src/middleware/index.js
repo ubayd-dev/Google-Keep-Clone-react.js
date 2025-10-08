@@ -6,18 +6,22 @@ dotenv.config();
 const prisma = new PrismaClient();
 
 export async function authenticateToken(req, res, next) {
+  console.log("Headers:", req.headers.authorization);
 
   try {
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
 
-    if (!token) return res.sendStatus(401).json({error: 'Token missing'}); // Unauthorized
+    if (!token) return res.sendStatus(401).json({ error: "Token missing" }); // Unauthorized
 
     // Verify token
     let user;
     try {
       user = jwt.verify(token, process.env.JWT_SECRET);
+      console.log("decoded jwt payload:", user);
     } catch (err) {
+      console.log("jwt verification failed:", err);
+
       return res.sendStatus(403); // Forbidden
     }
 
@@ -25,6 +29,7 @@ export async function authenticateToken(req, res, next) {
     const hasUser = await prisma.user.findUnique({
       where: { id: user.uuid },
     });
+    console.log("db lookup result:", hasUser);
 
     if (!hasUser) return res.sendStatus(404); // User not found
 

@@ -10,8 +10,12 @@
     "@testing-library/user-event": "^13.5.0",
     "antd": "^5.27.4",
     "axios": "^1.12.2",
+    "dayjs": "^1.11.18",
+    "firebase": "^12.3.0",
     "react": "^19.1.0",
+    "react-datepicker": "^8.7.0",
     "react-dom": "^19.1.0",
+    "react-router-dom": "^7.9.3",
     "react-scripts": "5.0.1",
     "uid": "^2.0.2",
     "web-vitals": "^2.1.4"

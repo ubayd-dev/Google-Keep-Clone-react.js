@@ -12,10 +12,21 @@ export const FormProvider = ({ children }) => {
     setLoading(true);
 
     try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.log("no token found, redirect to login");
+      }
       // HIT BACKEND CAL
-      const res = await api.get("/notes");
+      const res = await api.get("/notes", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log("Backend returned:", res.data);
+
       //   STORE RESPONSE IN STATE, UPDATE STATE
       setNotes(res.data);
+      return res.data;
     } catch (e) {
       console.error("Error fetching notes:", e);
     } finally {
@@ -37,7 +48,12 @@ export const FormProvider = ({ children }) => {
   };
   const editNote = async ({ id, title, text }) => {
     try {
-      const res = await api.patch(`/notes${id}`, { title, content: text });
+      const token = localStorage.getItem("token");
+      const res = await api.patch(
+        `/notes/${id}`,
+        { title, content: text },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
       setNotes((prevNotes) =>
         prevNotes.map((note) => (note.id === id ? res.data : note))
       );
@@ -46,9 +62,16 @@ export const FormProvider = ({ children }) => {
     }
   };
 
-  const deleteNote = async ({ id, title, text }) => {
+  const deleteNote = async ({ id }) => {
     try {
-      const res = await api.delete("/notes", { title, context: text });
+      // send token that stored in localStorage
+      const token = localStorage.getItem("token");
+      const res = await api.delete(`/notes/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      console.log("Note deleted:", res.data);
+      setNotes((prevNotes) => prevNotes.filter((note) => note.id !== id));
     } catch (e) {
       console.error("Error deleting note");
     }

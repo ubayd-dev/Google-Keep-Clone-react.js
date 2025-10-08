@@ -20,11 +20,11 @@ class NotesRouter {
   }
 
   patchRoutes() {
-    this.router.patch("/", authenticateToken, NotesController.updateNotes);
+    this.router.patch("/:id", authenticateToken, NotesController.updateNotes);
   }
 
   deleteRoutes() {
-    this.router.delete("/", authenticateToken, NotesController.deleteNotes);
+    this.router.delete("/:id", authenticateToken, NotesController.deleteNotes);
   }
 }
 

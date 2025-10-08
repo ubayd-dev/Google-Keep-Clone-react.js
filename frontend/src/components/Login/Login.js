@@ -11,9 +11,17 @@ const Login = ({ setIsLoggedIn, setShowLogin }) => {
     e.preventDefault();
     try {
       const res = await login({ email }); // send { email } to backend
-      // save token to localStorage
+      // save token to localStorage // expiry
+      const token = res.data.token;
+      const expiry = Date.now() + 6 * 60 * 60 * 1000;
       localStorage.setItem("token", res.data.token);
+      localStorage.setItem("tokenExpiry", expiry);
+      if (!token || Date.now() > expiry) {
+        console.log("Token expired or missing. Redirect to login.");
+        // handle logout or redirect
+      }
       localStorage.setItem("user", JSON.stringify(res.data.user));
+      localStorage.setItem("isLoggedIn", "true");
       alert("Login successful!");
       setIsLoggedIn(true);
     } catch (err) {

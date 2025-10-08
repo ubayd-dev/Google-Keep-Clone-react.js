@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./Form.css";
 import { useFormContext } from "../../context/FormContext.js";
 //  import axios
@@ -8,6 +8,19 @@ const Form = ({ edit, selectedNote, toggleModal }) => {
   const [title, setTitle] = useState((edit && selectedNote.title) || "");
   const [text, setText] = useState((edit && selectedNote.text) || "");
   const [isActiveForm, setIsActiveForm] = useState(edit);
+  const formRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (formRef.current && !formRef.current.contains(event.target)) {
+        setIsActiveForm(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const titleChangeHandler = (event) => {
     setTitle(event.target.value);
@@ -31,28 +44,21 @@ const Form = ({ edit, selectedNote, toggleModal }) => {
       toggleModal();
     }
 
-    //   setIsActiveForm(false);
-    // } else {
-    //   props.editNote({
-    //     id: selectedNote.id,
-    //     title,
-    //     text,
-    //   })
-    //   toggleModal();
-
     setTitle("");
     setText("");
+    setIsActiveForm(false)
   };
-
-  const formClickHandler = () => {
-    // create a state
-    setIsActiveForm(true);
-  };
-
+ const handleContainerClick = () => {
+    if (!isActiveForm) setIsActiveForm(true);
+  }; 
   return (
     // Based on the state, output create form
     <div>
-      <div className="form-container active-form" onClick={formClickHandler}>
+    <div
+      className={`form-container ${isActiveForm ? "active-form" : "inactive-form"}`}
+      ref={formRef}
+      onClick={handleContainerClick}
+    >
         <form
           onSubmit={submitFormHandler}
           className={isActiveForm ? "form" : ""}

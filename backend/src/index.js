@@ -8,18 +8,19 @@ import prisma from "./db.js"; // relative to src/index.js
 import ReminderRouter from "./routes/ReminderRouter.js";
 import "./services/reminderjob.js";
 import TaskRouter from "./routes/TaskRouter.js";
+import { startReminderScheduler } from "./utils/scheduler.js";
 
 dotenv.config();
 
 const app = express();
 
-const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:3001";
+const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:3000";
 app.use(
   cors({
     // origin URL
     //* methods []
     // include CRUD methods
-    origin: "http://localhost:3001",
+    origin: "http://localhost:3000",
     methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -50,6 +51,9 @@ app.use("/user", UserRoutes);
 app.use("/notes", NotesRouter);
 app.use("/task", TaskRouter);
 app.use("/reminder", ReminderRouter);
+
+// start the scheduler
+startReminderScheduler();
 
 const PORT = process.env.PORT || 1338;
 app.listen(PORT, () => {

@@ -1,5 +1,6 @@
 import { Router } from "express";
 import ReminderController from "../controllers/Reminder.js";
+import { authenticateToken } from "../middleware/index.js";
 
 class ReminderRouter {
   constructor() {
@@ -13,7 +14,7 @@ class ReminderRouter {
   getRoutes() {}
 
   postRoutes() {
-    this.router.post("/", ReminderController.createReminder);
+    this.router.post("/",authenticateToken, ReminderController.createReminder);
   }
 
   patchRoutes() {}

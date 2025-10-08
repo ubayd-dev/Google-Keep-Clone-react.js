@@ -12,7 +12,6 @@ class ReminderController {
           email,
           title,
           isSent: isSent || false,
-          email,
         },
       });
       res.status(201).json(reminder);
