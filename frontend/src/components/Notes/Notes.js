@@ -10,10 +10,10 @@ const Notes = ({ toggleModal, setSelectedNote}) => {
 
   useEffect(() => {
     fetchNotes();
-//       .then((res) => {
+  }, []);
+  //       .then((res) => {
 // setNotes(res)
 //      });
-  }, []);
 
   return (
     <div className="notes">

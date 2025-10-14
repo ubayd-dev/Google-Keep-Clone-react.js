@@ -1,21 +1,32 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getMessaging, getToken } from "firebase/messaging";
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyBf4SfpMexd5BGK9V6Tfb8vn4S6xv2zsPg",
-  authDomain: "keep-pushnotifications.firebaseapp.com",
-  projectId: "keep-pushnotifications",
-  storageBucket: "keep-pushnotifications.firebasestorage.app",
-  messagingSenderId: "65990803343",
-  appId: "1:65990803343:web:c0f8303d91bf6707aad5fa",
-  measurementId: "G-M50105MRCG"
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+const messaging = getMessaging(app);
+
+export const generateToken = async () => {
+  const permission = await Notification.requestPermission();
+  if (permission === "granted") {
+    const token = await getToken(messaging, {
+      vapidKey: process.env.REACT_APP_FIREBASE_VAPID_KEY,
+    });
+    console.log("PERMISSION:", token);
+  }
+    await fetch("http://localhost:1338/user/save-fc-token", {
+        method: "POST"
+    })
+};
+
+export { messaging };

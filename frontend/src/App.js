@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -11,9 +11,20 @@ import Form from "./components/Form/Form.js";
 import Notes from "./components/Notes/Notes.js";
 import Modal from "./components/Modal/Modal.js";
 import Login from "./components/Login/Login.js";
+import {
+  generateToken,
+  messaging,
+} from "./components/notifications/firebase.js";
+import { onMessage } from "firebase/messaging";
 
 const NOTES = [];
 const App = () => {
+  useEffect(() => {
+    generateToken();
+    onMessage(messaging, (payload) => {
+      console.log(payload);
+    });
+  }, []);
   // state for auth
   // const [isLoggedIn, setIsLoggedIn] = useState(false);
   // const [showLogin, setShowLogin] = useState(true);
