@@ -34,3 +34,12 @@ A full-stack note-taking web app inspired by **Google Keep**, built with **React
 ```bash
 git clone https://github.com/<your-username>/google-keep-react-app.git
 cd google-keep-react-app
+
+
+---
+
+## 🔐 Login Details
+
+Use the following credentials to log in:
+
+Email: thaqibubayd@gmail.com
